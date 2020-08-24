@@ -1,17 +1,18 @@
-.block {
-	display: flex;
-	justify-content: space-between;
-}
-
-.dark {
-	background-color: grey;
-
+.box {
 	width: 500px;
 	height: 500px;
 	border: 1px solid #000;
 }
-.light {
+.box .pink {
 	background: violet;
+	width: 500px;
+	height: 500px;
+	border: 1px solid #000;
+}
+
+.box .dark {
+	background-color: grey;
+
 	width: 500px;
 	height: 500px;
 	border: 1px solid #000;
