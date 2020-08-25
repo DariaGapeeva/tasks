@@ -1,3 +1,4 @@
+import { disableButtons, enableButtons, changeTheme } from './themeReduser';
 const INCREMENT = 'INCREMENT';
 const DECREMENT = 'DECREMENT';
 const ASYNC = 'ASYNC';
@@ -39,9 +40,14 @@ export const increment = () => ({ type: INCREMENT });
 export const decrement = () => ({ type: DECREMENT });
 export const async = () => {
 	return (dispatch) => {
+		dispatch(disableButtons());
+		dispatch(changeTheme());
 		setTimeout(() => {
 			dispatch({ type: ASYNC })
+			dispatch(enableButtons())
+			dispatch(changeTheme());
 		}, 2000);
+
 	}
 }
 export default counterReducer;

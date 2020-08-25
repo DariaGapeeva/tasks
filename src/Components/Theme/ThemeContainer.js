@@ -4,7 +4,8 @@ import Theme from './Theme'
 
 const mapStateToProps = (state) => {
 	return {
-		value: state.theme.value
+		value: state.theme.value,
+		disabled: state.theme.disabled
 	}
 }
 
