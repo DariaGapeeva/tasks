@@ -1,15 +1,19 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import CounterContainer from './Counter/CounterContainer';
+import CounterContainer from './Components/Counter/CounterContainer';
 import ThemeContainer from './Components/Theme/ThemeContainer';
+import TableContainer from './Components/Table/TableContainer';
 
 function App() {
-	return (
+	return (<div >
 		<div className="block">
 			<CounterContainer />
 			<ThemeContainer />
+
+
 		</div>
+		<TableContainer />
+	</div>
 	);
 }
 

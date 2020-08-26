@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import Counter from './Counter';
-import { increment, decrement, async } from './../redux/counterReducer';
-import { disableButtons, enableButtons } from './../redux/themeReduser'
+import { increment, decrement, async } from './../../redux/counterReducer';
+import { disableButtons, enableButtons } from './../../redux/themeReduser'
 
 
 const mapStateToProps = (state) => {
