@@ -26,7 +26,8 @@ const tableReducer = (state = initialState, action) => {
 		case SET_USERS: {
 			return {
 				...state,
-				users: action.users
+				users: action.users,
+				name: action.users.map(user => '')
 			}
 		}
 		case DELETE_USER: {
@@ -63,7 +64,9 @@ const tableReducer = (state = initialState, action) => {
 		case UPDATE_NAME: {
 			return {
 				...state,
-				name: state.name.map(item => state.name.indexOf(item) === action.userId ? action.name : '')
+				name: [state.name.map(item => state.name.indexOf(item) === action.userId ? action.name : '')]
+				// name: [...state.name,
+				// name[action.userId] = action.name]
 
 			}
 		}
@@ -141,15 +144,17 @@ export const saveNameThunkAC = (userId, name) => {
 			url: `https://jsonplaceholder.typicode.com/users/${userId}`,
 			method: 'patch',
 			data: ({
-				name: `${name[userId]}`,
+				name: `${name}`,
 				username: 'Bella',
 				phone: "123456789"
 			}),
 			headers: {
 				"Content-type": "application/json; charset=UTF-8"
 			}
-		}).then(response =>
-			dispatch(setOneUser(response.data, userId)))
+		}).then(response => {
+			console.log(response.data)
+			dispatch(setOneUser(response.data, userId))
+		})
 	}
 }
 
