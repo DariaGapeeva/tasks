@@ -29,7 +29,7 @@ const Table = (props) => {
 					<td>{user.phone}<input disabled={props.inputDisabled}></input></td>
 					<td>{`${user.address.city} , ${user.address.street}, ${user.address.suite}  `} </td>
 					<td>{user.website} <input disabled={props.inputDisabled}></input></td>
-					<td><button disabled={props.buttonDeleteDisabled} onClick={() => props.deleteUser(user.id)}>Удалить</button><button disabled={props.buttonUpdateDisabled} onClick={() => props.updateUserData(user.id)}>Редактировать</button><button disabled={props.buttonSaveDisabled}>Сохранить</button></td></tr>)}
+					<td><button disabled={props.buttonDeleteDisabled} onClick={() => props.deleteUserThunk(user.id)}>Удалить</button><button disabled={props.buttonUpdateDisabled} onClick={() => props.updateUserData(user.id)}>Редактировать</button><button disabled={props.buttonSaveDisabled}>Сохранить</button></td></tr>)}
 
 		</table>
 

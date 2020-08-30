@@ -2,7 +2,7 @@ import React from 'react';
 import Table from './Table';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { setUsersAC, deleteUserAC, updateUserDataAC } from '../../redux/tableReduser';
+import { setUsersAC, deleteUserAC, updateUserDataAC, deleteUserThunkAC } from '../../redux/tableReduser';
 
 class TableContainer extends React.Component {
 	componentDidMount() {
@@ -23,6 +23,7 @@ class TableContainer extends React.Component {
 			inputDisabled={this.props.inputDisabled}
 			updateUserData={this.props.updateUserData}
 			buttonUpdateDisabled={this.props.buttonUpdateDisabled}
+			deleteUserThunk={this.props.deleteUserThunk}
 		/>
 	}
 }
@@ -41,7 +42,8 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		setUsers: (users) => (dispatch(setUsersAC(users))),
 		deleteUser: (userId) => (dispatch(deleteUserAC(userId))),
-		updateUserData: (userId) => (dispatch(updateUserDataAC(userId)))
+		updateUserData: (userId) => (dispatch(updateUserDataAC(userId))),
+		deleteUserThunk: (userId) => (dispatch(deleteUserThunkAC(userId)))
 	}
 }
 

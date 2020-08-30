@@ -1,6 +1,9 @@
+import axios from "axios";
+
 const SET_USERS = 'SET_USERS';
 const DELETE_USER = 'DELETE_USER';
 const UPDATE_USER_DATA = 'UPDATE_USER_DATA';
+const ALL_BUTTONS_DISABLED = 'ALL_BUTTONS_DISABLED';
 
 const initialState = {
 	users: [],
@@ -22,7 +25,11 @@ const tableReducer = (state = initialState, action) => {
 
 			return {
 				...state,
-				users: state.users.filter(user => user.id !== action.userId)
+				users: state.users.filter(user => user.id !== action.userId),
+				buttonSaveDisabled: true,
+				buttonDeleteDisabled: false,
+				buttonUpdateDisabled: false,
+				inputDisabled: true,
 			}
 		}
 		case UPDATE_USER_DATA: {
@@ -34,6 +41,17 @@ const tableReducer = (state = initialState, action) => {
 				buttonUpdateDisabled: true
 			}
 		}
+		case ALL_BUTTONS_DISABLED: {
+			return {
+				...state,
+				buttonSaveDisabled: true,
+				buttonDeleteDisabled: true,
+				buttonUpdateDisabled: true,
+				inputDisabled: true,
+
+			}
+		}
+
 
 		default: return state
 
@@ -44,6 +62,21 @@ const tableReducer = (state = initialState, action) => {
 
 export const setUsersAC = (users) => ({ type: SET_USERS, users });
 export const deleteUserAC = (userId) => ({ type: DELETE_USER, userId });
-export const updateUserDataAC = (userId) => ({ type: UPDATE_USER_DATA, userId })
+export const updateUserDataAC = (userId) => ({ type: UPDATE_USER_DATA, userId });
+export const allButtonsDisabledAC = () => ({ type: ALL_BUTTONS_DISABLED })
+
+export const deleteUserThunkAC = (userId) => {
+	return (dispatch) => {
+		dispatch(allButtonsDisabledAC());
+		axios.delete(`https://jsonplaceholder.typicode.com/users/${userId}`)
+			.then(response => {
+				console.log(response.status)
+				if (response.status === 200) {
+					dispatch(deleteUserAC(userId))
+				}
+			})
+
+	}
+}
 
 export default tableReducer;
