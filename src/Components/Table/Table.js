@@ -6,6 +6,19 @@ import styles from './Table.module.css'
 
 const Table = (props) => {
 
+	// let changeName = (event) => {
+	// 	props.updateName(event.target.value)
+
+	// }
+	let changeUserName = (event) => {
+		props.updateUserName(event.target.value)
+
+	}
+	let changePhone = (event) => {
+		props.updatePhone(event.target.value)
+
+	}
+
 
 	return <div>
 
@@ -23,13 +36,13 @@ const Table = (props) => {
 			</tr>
 			{props.users.map(user =>
 				<tr key={user.id}>
-					<td>{user.id} </td>
-					<td>{user.name} <input disabled={props.inputDisabled} ></input></td>
-					<td>{user.username} <input disabled={props.inputDisabled}></input></td>
-					<td>{user.phone}<input disabled={props.inputDisabled}></input></td>
+					<td>{props.users.indexOf(user) + 1} </td>
+					<td>{user.name} <input disabled={props.inputDisabled} value={props.name[user.id]} onChange={(event) => props.updateName(event.target.value, user.id)}></input></td>
+					<td>{user.username} <input disabled={props.inputDisabled} value={props.username} onChange={changeUserName} ></input></td>
+					<td>{user.phone}<input disabled={props.inputDisabled} value={props.phone} onChange={changePhone} ></input></td>
 					<td>{`${user.address.city} , ${user.address.street}, ${user.address.suite}  `} </td>
 					<td>{user.website} <input disabled={props.inputDisabled}></input></td>
-					<td><button disabled={props.buttonDeleteDisabled} onClick={() => props.deleteUserThunk(user.id)}>Удалить</button><button disabled={props.buttonUpdateDisabled} onClick={() => props.updateUserData(user.id)}>Редактировать</button><button disabled={props.buttonSaveDisabled}>Сохранить</button></td></tr>)}
+					<td><button disabled={props.buttonDeleteDisabled} onClick={() => props.deleteUserThunk(user.id)}>Удалить</button><button disabled={props.buttonUpdateDisabled} onClick={() => props.updateUserData(user.id)}>Редактировать</button><button disabled={props.buttonSaveDisabled} onClick={() => { props.saveNameThunk(user.id, props.name) }}>Сохранить</button></td></tr>)}
 
 		</table>
 

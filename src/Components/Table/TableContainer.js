@@ -2,7 +2,7 @@ import React from 'react';
 import Table from './Table';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { setUsersAC, deleteUserAC, updateUserDataAC, deleteUserThunkAC } from '../../redux/tableReduser';
+import { setUsersAC, deleteUserAC, updateUserDataAC, deleteUserThunkAC, updateNameAC, saveNameThunkAC, updateUserNameAC, updatePhoneAC } from '../../redux/tableReduser';
 
 class TableContainer extends React.Component {
 	componentDidMount() {
@@ -24,6 +24,12 @@ class TableContainer extends React.Component {
 			updateUserData={this.props.updateUserData}
 			buttonUpdateDisabled={this.props.buttonUpdateDisabled}
 			deleteUserThunk={this.props.deleteUserThunk}
+			updateName={this.props.updateName}
+			updateUserName={this.props.updateUserName}
+			updatePhone={this.props.updatePhone}
+			name={this.props.name}
+
+			saveNameThunk={this.props.saveNameThunk}
 		/>
 	}
 }
@@ -35,7 +41,10 @@ const mapStateToProps = (state) => {
 		inputDisabled: state.table.inputDisabled,
 		buttonDeleteDisabled: state.table.buttonDeleteDisabled,
 		inputDisabled: state.table.inputDisabled,
-		buttonUpdateDisabled: state.table.buttonUpdateDisabled
+		buttonUpdateDisabled: state.table.buttonUpdateDisabled,
+		name: state.table.name,
+		username: state.table.username,
+		phone: state.table.phone
 	}
 }
 const mapDispatchToProps = (dispatch) => {
@@ -43,7 +52,11 @@ const mapDispatchToProps = (dispatch) => {
 		setUsers: (users) => (dispatch(setUsersAC(users))),
 		deleteUser: (userId) => (dispatch(deleteUserAC(userId))),
 		updateUserData: (userId) => (dispatch(updateUserDataAC(userId))),
-		deleteUserThunk: (userId) => (dispatch(deleteUserThunkAC(userId)))
+		deleteUserThunk: (userId) => (dispatch(deleteUserThunkAC(userId))),
+		updateName: (name, userId) => (dispatch(updateNameAC(name, userId))),
+		saveNameThunk: (userId, name) => (dispatch(saveNameThunkAC(userId, name))),
+		updateUserName: (username) => (dispatch(updateUserNameAC(username))),
+		updatePhone: (phone) => (dispatch(updatePhoneAC(phone)))
 	}
 }
 
