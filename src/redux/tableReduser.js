@@ -7,8 +7,9 @@ const ALL_BUTTONS_DISABLED = 'ALL_BUTTONS_DISABLED';
 const UPDATE_NAME = 'UPDATE_USER_NAME';
 const UPDATE_USERNAME = 'UPDATE_USERNAME';
 const UPDATE_PHONE = 'UPDATE_PHONE';
-const SAVE_NEW_NAME = 'SAVE_NEW_NAME';
+const INITIAL = 'INITIAL';
 const SET_ONE_USER = 'SET_ONE_USER';
+
 
 const initialState = {
 	users: [],
@@ -16,9 +17,10 @@ const initialState = {
 	buttonDeleteDisabled: false,
 	buttonUpdateDisabled: false,
 	inputDisabled: true,
-	name: [],
 	username: '',
-	phone: ''
+	phone: '',
+	currentUser: -1,
+	name: ''
 }
 
 const tableReducer = (state = initialState, action) => {
@@ -27,7 +29,8 @@ const tableReducer = (state = initialState, action) => {
 			return {
 				...state,
 				users: action.users,
-				name: action.users.map(user => '')
+				name: action.users.map(item => '')
+
 			}
 		}
 		case DELETE_USER: {
@@ -47,7 +50,8 @@ const tableReducer = (state = initialState, action) => {
 				buttonDeleteDisabled: true,
 				buttonSaveDisabled: false,
 				inputDisabled: false,
-				buttonUpdateDisabled: true
+				buttonUpdateDisabled: true,
+
 			}
 		}
 
@@ -64,16 +68,16 @@ const tableReducer = (state = initialState, action) => {
 		case UPDATE_NAME: {
 			return {
 				...state,
-				name: [state.name.map(item => state.name.indexOf(item) === action.userId ? action.name : '')]
-				// name: [...state.name,
-				// name[action.userId] = action.name]
-
+				name: action.name,
+				currentUser: action.userId
 			}
 		}
+
 		case UPDATE_USERNAME: {
 			return {
 				...state,
-				username: action.username
+				username: action.username,
+				currentUser: action.userId
 			}
 		}
 		case UPDATE_PHONE: {
@@ -82,9 +86,18 @@ const tableReducer = (state = initialState, action) => {
 				phone: action.phone
 			}
 		}
-		case SAVE_NEW_NAME: {
+		case INITIAL: {
 			return {
 				...state,
+				buttonSaveDisabled: true,
+				buttonDeleteDisabled: false,
+				buttonUpdateDisabled: false,
+				inputDisabled: true,
+
+				name: '',
+				username: '',
+
+				currentUser: -1
 
 			}
 		}
@@ -112,8 +125,9 @@ export const deleteUserAC = (userId) => ({ type: DELETE_USER, userId });
 export const updateUserDataAC = (userId) => ({ type: UPDATE_USER_DATA, userId });
 export const allButtonsDisabledAC = () => ({ type: ALL_BUTTONS_DISABLED });
 export const updateNameAC = (name, userId) => ({ type: UPDATE_NAME, name, userId });
-export const updateUserNameAC = (username) => ({ type: UPDATE_USERNAME, username })
-export const updatePhoneAC = (phone) => ({ type: UPDATE_USERNAME, phone })
+export const updateUserNameAC = (username, userId) => ({ type: UPDATE_USERNAME, username, userId });
+export const updatePhoneAC = (phone) => ({ type: UPDATE_USERNAME, phone });
+export const initialAC = () => ({ type: INITIAL })
 
 export const setOneUser = (user, userId) => ({ type: SET_ONE_USER, user, userId })
 
@@ -137,7 +151,7 @@ export const saveUserDataThunkAC = () => {
 
 	}
 }
-export const saveNameThunkAC = (userId, name) => {
+export const saveNameThunkAC = (userId, name, username) => {
 	return (dispatch) => {
 		dispatch(allButtonsDisabledAC());
 		axios({
@@ -145,15 +159,17 @@ export const saveNameThunkAC = (userId, name) => {
 			method: 'patch',
 			data: ({
 				name: `${name}`,
-				username: 'Bella',
+				username: `${username}`,
 				phone: "123456789"
 			}),
 			headers: {
 				"Content-type": "application/json; charset=UTF-8"
 			}
 		}).then(response => {
-			console.log(response.data)
-			dispatch(setOneUser(response.data, userId))
+			console.log(response.data);
+			dispatch(setOneUser(response.data, userId));
+			dispatch(initialAC());
+
 		})
 	}
 }

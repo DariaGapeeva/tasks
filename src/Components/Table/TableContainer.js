@@ -28,6 +28,8 @@ class TableContainer extends React.Component {
 			updateUserName={this.props.updateUserName}
 			updatePhone={this.props.updatePhone}
 			name={this.props.name}
+			currentUser={this.props.currentUser}
+			username={this.props.username}
 
 			saveNameThunk={this.props.saveNameThunk}
 		/>
@@ -44,7 +46,9 @@ const mapStateToProps = (state) => {
 		buttonUpdateDisabled: state.table.buttonUpdateDisabled,
 		name: state.table.name,
 		username: state.table.username,
-		phone: state.table.phone
+		phone: state.table.phone,
+		currentUser: state.table.currentUser
+
 	}
 }
 const mapDispatchToProps = (dispatch) => {
@@ -54,8 +58,8 @@ const mapDispatchToProps = (dispatch) => {
 		updateUserData: (userId) => (dispatch(updateUserDataAC(userId))),
 		deleteUserThunk: (userId) => (dispatch(deleteUserThunkAC(userId))),
 		updateName: (name, userId) => (dispatch(updateNameAC(name, userId))),
-		saveNameThunk: (userId, name) => (dispatch(saveNameThunkAC(userId, name))),
-		updateUserName: (username) => (dispatch(updateUserNameAC(username))),
+		saveNameThunk: (userId, name, username) => (dispatch(saveNameThunkAC(userId, name, username))),
+		updateUserName: (username, userId) => (dispatch(updateUserNameAC(username, userId))),
 		updatePhone: (phone) => (dispatch(updatePhoneAC(phone)))
 	}
 }
