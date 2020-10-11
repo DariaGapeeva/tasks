@@ -1,24 +1,23 @@
-import axios from "axios";
+import { usersApi } from "../API/api";
 
 const SET_USERS = 'SET_USERS';
 const DELETE_USER = 'DELETE_USER';
 const UPDATE_USER_DATA = 'UPDATE_USER_DATA';
 const ALL_BUTTONS_DISABLED = 'ALL_BUTTONS_DISABLED';
-const UPDATE_NAME = 'UPDATE_USER_NAME';
-const UPDATE_USERNAME = 'UPDATE_USERNAME';
-const UPDATE_PHONE = 'UPDATE_PHONE';
-const SAVE_NEW_NAME = 'SAVE_NEW_NAME';
-const SET_ONE_USER = 'SET_ONE_USER';
+const UPDATE_BUTTON = 'UPDATE_BUTTON';
+const ON_CLICK_BUTTON_FILL_ADD_LINE = 'ON_CLICK_BUTTON_FILL_ADD_LINE';
+const ADD_NEW_USER = 'ADD_NEW_USER';
 
 const initialState = {
 	users: [],
-	buttonSaveDisabled: true,
-	buttonDeleteDisabled: false,
-	buttonUpdateDisabled: false,
-	inputDisabled: true,
-	name: [],
-	username: '',
-	phone: ''
+	buttonSaveDisabled: [true, true, true, true, true, true, true, true, true, true, true],
+	buttonDeleteDisabled: [false, false, false, false, false, false, false, false, false, false],
+	buttonUpdateDisabled: [false, false, false, false, false, false, false, false, false, false],
+	inputDisabled: [true, true, true, true, true, true, true, true, true, true, true],
+	buttonFillAddLine: false,
+	inputFillAddLine: true,
+	buttonSaveAddLine: true
+
 }
 
 const tableReducer = (state = initialState, action) => {
@@ -26,8 +25,7 @@ const tableReducer = (state = initialState, action) => {
 		case SET_USERS: {
 			return {
 				...state,
-				users: action.users,
-				name: action.users.map(user => '')
+				users: action.users
 			}
 		}
 		case DELETE_USER: {
@@ -35,71 +33,88 @@ const tableReducer = (state = initialState, action) => {
 			return {
 				...state,
 				users: state.users.filter(user => user.id !== action.userId),
-				buttonSaveDisabled: true,
-				buttonDeleteDisabled: false,
-				buttonUpdateDisabled: false,
-				inputDisabled: true,
+				buttonSaveDisabled: state.buttonSaveDisabled.filter((item, index) => index !== action.index),
+				buttonDeleteDisabled: state.buttonDeleteDisabled.filter((item, index) => index !== action.index),
+				buttonUpdateDisabled: state.buttonUpdateDisabled.filter((item, index) => index !== action.index),
+				inputDisabled: state.inputDisabled.filter((item, index) => index !== action.index),
 			}
 		}
 		case UPDATE_USER_DATA: {
 			return {
 				...state,
-				buttonDeleteDisabled: true,
-				buttonSaveDisabled: false,
-				inputDisabled: false,
-				buttonUpdateDisabled: true
+				users: state.users.map(user => user.id === action.userId
+					? {
+						...user,
+						name: action.name || user.name,
+						username: action.username || user.username,
+						phone: action.phone || user.phone,
+						website: action.website || user.website
+					}
+					: user),
+				buttonDeleteDisabled: state.buttonDeleteDisabled.map((item, index) => index === action.index ? false : item),
+				buttonSaveDisabled: state.buttonSaveDisabled.map((item, index) => index === action.index ? true : item),
+				inputDisabled: state.inputDisabled.map((item, index) => index === action.index ? true : item),
+				buttonUpdateDisabled: state.buttonUpdateDisabled.map((item, index) => index === action.index ? false : item),
+			}
+		}
+		case UPDATE_BUTTON: {
+			return {
+				...state,
+				buttonDeleteDisabled: state.buttonDeleteDisabled.map((item, index) => index === action.index ? true : item),
+				buttonSaveDisabled: state.buttonSaveDisabled.map((item, index) => index === action.index ? false : item),
+				inputDisabled: state.inputDisabled.map((item, index) => index === action.index ? false : item),
+				buttonUpdateDisabled: state.buttonUpdateDisabled.map((item, index) => index === action.index ? true : item),
+
 			}
 		}
 
 		case ALL_BUTTONS_DISABLED: {
 			return {
 				...state,
-				buttonSaveDisabled: true,
-				buttonDeleteDisabled: true,
-				buttonUpdateDisabled: true,
-				inputDisabled: true,
+				buttonDeleteDisabled: state.buttonDeleteDisabled.map((item, index) => index === action.index ? true : item),
+				buttonSaveDisabled: state.buttonSaveDisabled.map((item, index) => index === action.index ? true : item),
+				inputDisabled: state.inputDisabled.map((item, index) => index === action.index ? true : item),
+				buttonUpdateDisabled: state.buttonUpdateDisabled.map((item, index) => index === action.index ? true : item),
 
 			}
 		}
-		case UPDATE_NAME: {
+
+		case ON_CLICK_BUTTON_FILL_ADD_LINE: {
 			return {
 				...state,
-				name: [state.name.map(item => state.name.indexOf(item) === action.userId ? action.name : '')]
-				// name: [...state.name,
-				// name[action.userId] = action.name]
+				inputFillAddLine: false,
+				buttonSaveAddLine: false,
+				buttonFillAddLine: true
+
 
 			}
 		}
-		case UPDATE_USERNAME: {
-			return {
-				...state,
-				username: action.username
+
+		case ADD_NEW_USER: {
+			let newUser = {
+				id: state.users.length + 1,
+				name: action.name,
+				username: action.username,
+				phone: action.phone,
+				address: action.address,
+				website: action.website,
+
+
 			}
-		}
-		case UPDATE_PHONE: {
 			return {
 				...state,
-				phone: action.phone
-			}
-		}
-		case SAVE_NEW_NAME: {
-			return {
-				...state,
+				users: [...state.users, newUser],
+				buttonSaveDisabled: [...state.buttonSaveDisabled, true],
+				buttonDeleteDisabled: [...state.buttonDeleteDisabled, false],
+				buttonUpdateDisabled: [...state.buttonUpdateDisabled, false],
+				inputDisabled: [...state.inputDisabled, true],
+				buttonFillAddLine: false,
+				inputFillAddLine: true,
+				buttonSaveAddLine: true
 
 			}
 		}
-		case SET_ONE_USER: {
-			return {
-				...state,
-				users: state.users.map(user => action.userId === user.id ? action.user : user),
-				buttonSaveDisabled: true,
-				buttonDeleteDisabled: false,
-				buttonUpdateDisabled: false,
-				inputDisabled: true,
 
-			}
-
-		}
 		default: return state
 
 
@@ -108,28 +123,13 @@ const tableReducer = (state = initialState, action) => {
 
 
 export const setUsersAC = (users) => ({ type: SET_USERS, users });
-export const deleteUserAC = (userId) => ({ type: DELETE_USER, userId });
-export const updateUserDataAC = (userId) => ({ type: UPDATE_USER_DATA, userId });
-export const allButtonsDisabledAC = () => ({ type: ALL_BUTTONS_DISABLED });
-export const updateNameAC = (name, userId) => ({ type: UPDATE_NAME, name, userId });
-export const updateUserNameAC = (username) => ({ type: UPDATE_USERNAME, username })
-export const updatePhoneAC = (phone) => ({ type: UPDATE_USERNAME, phone })
+export const deleteUserAC = (userId, index) => ({ type: DELETE_USER, userId, index });
+export const updateUserDataAC = (userId, index, name, username, phone, website) => ({ type: UPDATE_USER_DATA, userId, index, name, username, phone, website });
+export const updateButtonAC = (index) => ({ type: UPDATE_BUTTON, index });
+export const allButtonsDisabledAC = (index) => ({ type: ALL_BUTTONS_DISABLED, index });
+export const onClickButtonFillAddLineAC = () => ({ type: ON_CLICK_BUTTON_FILL_ADD_LINE });
+export const addNewUserAC = (name, username, phone, address, website) => ({ type: ADD_NEW_USER, name, username, phone, address, website });
 
-export const setOneUser = (user, userId) => ({ type: SET_ONE_USER, user, userId })
-
-export const deleteUserThunkAC = (userId) => {
-	return (dispatch) => {
-		dispatch(allButtonsDisabledAC());
-		axios.delete(`https://jsonplaceholder.typicode.com/users/${userId}`)
-			.then(response => {
-
-				if (response.status === 200) {
-					dispatch(deleteUserAC(userId))
-				}
-			})
-
-	}
-}
 
 export const saveUserDataThunkAC = () => {
 	return (dispatch) => {
@@ -137,25 +137,21 @@ export const saveUserDataThunkAC = () => {
 
 	}
 }
-export const saveNameThunkAC = (userId, name) => {
-	return (dispatch) => {
-		dispatch(allButtonsDisabledAC());
-		axios({
-			url: `https://jsonplaceholder.typicode.com/users/${userId}`,
-			method: 'patch',
-			data: ({
-				name: `${name}`,
-				username: 'Bella',
-				phone: "123456789"
-			}),
-			headers: {
-				"Content-type": "application/json; charset=UTF-8"
-			}
-		}).then(response => {
-			console.log(response.data)
-			dispatch(setOneUser(response.data, userId))
-		})
+
+export const getUsersDataThunkAC = () => async (dispatch) => {
+	let response = await usersApi.getUsersData();
+	dispatch(setUsersAC(response.data));
+}
+
+export const deleteUserThunkAC = (userId, index) => async (dispatch) => {
+	dispatch(allButtonsDisabledAC(index));
+	let response = await usersApi.deleteUser(userId);
+	if (response.status === 200) {
+		dispatch(deleteUserAC(userId, index))
 	}
 }
+
+
+
 
 export default tableReducer;
