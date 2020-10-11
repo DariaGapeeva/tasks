@@ -8,6 +8,7 @@ const UPDATE_BUTTON = 'UPDATE_BUTTON';
 const ON_CLICK_BUTTON_FILL_ADD_LINE = 'ON_CLICK_BUTTON_FILL_ADD_LINE';
 const ADD_NEW_USER = 'ADD_NEW_USER';
 
+
 const initialState = {
 	users: [],
 	buttonSaveDisabled: [true, true, true, true, true, true, true, true, true, true, true],

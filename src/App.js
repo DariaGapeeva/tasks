@@ -12,7 +12,9 @@ function App() {
 
 
 		</div>
-		<TableContainer />
+		<div className="table">
+			<TableContainer />
+		</div>
 	</div>
 	);
 }
